@@ -7,7 +7,8 @@ import {
     InfoWindow,
     useMap,
 } from '@vis.gl/react-google-maps';
-import { GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_MAP_ID } from './config';
+import { GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_MAP_ID, IS_GOOGLE_MAPS_AVAILABLE } from './config';
+import LeafletMapView from './LeafletMapView';
 
 export interface PropertyData {
     id?: string | number;
@@ -230,6 +231,10 @@ export default function MapView({ properties, showStationRoutes }: MapViewProps)
     }, []);
 
     const defaultCenter = { lat: 52.035, lng: -2.43 };
+
+    if (!IS_GOOGLE_MAPS_AVAILABLE) {
+        return <LeafletMapView properties={properties} />;
+    }
 
     return (
         <APIProvider apiKey={GOOGLE_MAPS_API_KEY} libraries={['geometry']}>

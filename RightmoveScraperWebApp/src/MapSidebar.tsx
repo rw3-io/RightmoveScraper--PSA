@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { IS_GOOGLE_MAPS_AVAILABLE } from './config';
 
 export interface MapFilters {
     maxDaysOnMarket: number | null;
@@ -214,18 +215,20 @@ export default function MapSidebar({ totalCount, filteredCount, sqftCount, filte
                 </div>
             </div>
 
-            <div className="sidebar-section">
-                <h3>Navigation</h3>
-                <label className="toggle-label">
-                    <div
-                        className={`toggle-switch ${filters.showStationRoutes ? 'on' : ''}`}
-                        onClick={() => update({ showStationRoutes: !filters.showStationRoutes })}
-                    >
-                        <div className="toggle-knob" />
-                    </div>
-                    <span>Walk route to station</span>
-                </label>
-            </div>
+            {IS_GOOGLE_MAPS_AVAILABLE && (
+                <div className="sidebar-section">
+                    <h3>Navigation</h3>
+                    <label className="toggle-label">
+                        <div
+                            className={`toggle-switch ${filters.showStationRoutes ? 'on' : ''}`}
+                            onClick={() => update({ showStationRoutes: !filters.showStationRoutes })}
+                        >
+                            <div className="toggle-knob" />
+                        </div>
+                        <span>Walk route to station</span>
+                    </label>
+                </div>
+            )}
 
             {hasActiveFilters && (
                 <button

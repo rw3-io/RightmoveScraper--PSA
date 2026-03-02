@@ -15,7 +15,7 @@ The project is split into two main components:
 ### 1. Prerequisites
 - **Python 3.10+**
 - **Node.js 18+**
-- **Google Maps API Key** (Required for the Map View and Directions)
+- **Google Maps API Key** (Optional - Defaults to OpenStreetMap. Required for Satellite view and Station Walking Directions)
 
 ### 2. Backend Setup
 Navigate to the root directory:
@@ -41,7 +41,7 @@ cd RightmoveScraperWebApp
 # Install dependencies
 npm install
 
-# Setup environment variables
+# Setup environment variables (Optional)
 # Create a .env file in RightmoveScraperWebApp/ with:
 VITE_GOOGLE_MAPS_API_KEY=your_api_key_here
 VITE_GOOGLE_MAPS_MAP_ID=your_map_id_here
@@ -68,8 +68,9 @@ The application will be available at `http://localhost:5173`.
 - **Automated Processing**: Extract addresses, prices, square footage, and images automatically.
 
 ### 🗺️ Map & Analytics
-- **Interactive Map View**: See all scraped properties on a Google Map with custom markers.
-- **Station Directions**: Toggle walking routes to the nearest train station for any selected property.
+- **Interactive Map View**: See all scraped properties on a map with custom markers.
+- **Smart Fallback**: Automatically uses **OpenStreetMap** if no Google Maps API key is provided, ensuring the app is always functional.
+- **Station Directions**: Toggle walking routes to the nearest train station (Requires Google Maps API).
 - **Market Insights Dashboard**: Open the "📊 View Market Insights" overlay to see:
     - Price distributions (High/Low/Avg).
     - Bedroom & Property Type breakdowns (Pie charts).
@@ -88,7 +89,7 @@ The application will be available at `http://localhost:5173`.
 
 ## 🎨 Technologies Used
 
-- **Frontend**: React 19, Vite, Recharts (Data Viz), Lucide React (Icons), Google Maps API.
+- **Frontend**: React 19, Vite, Recharts (Data Viz), Leaflet (Map Fallback), Lucide React (Icons), Google Maps API.
 - **Backend**: FastAPI (Python), Playwright (Browser Automation), BeautifulSoup4 (HTML Parsing).
 - **Styling**: Vanilla CSS with modern glassmorphism aesthetics.
 
