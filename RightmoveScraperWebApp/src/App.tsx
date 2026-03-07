@@ -8,15 +8,7 @@ import StatsOverlay from './StatsOverlay';
 import HelpOverlay from './HelpOverlay';
 
 // Standard Rightmove Parameters for Property For Sale
-const PROPERTY_TYPES = [
-  { value: 'detached', label: 'Detached' },
-  { value: 'semi-detached', label: 'Semi-Detached' },
-  { value: 'terraced', label: 'Terraced' },
-  { value: 'flats', label: 'Flats / Apartments' },
-  { value: 'bungalow', label: 'Bungalows' },
-  { value: 'land', label: 'Land' },
-  { value: 'commercial', label: 'Commercial' },
-];
+import { PROPERTY_TYPES } from './constants';
 
 const TENURE_TYPES = [
   { value: 'FREEHOLD', label: 'Freehold' },
@@ -143,8 +135,16 @@ function App() {
       if (isNaN(price) || price > mapFilters.maxPrice) return false;
     }
     if (mapFilters.propertyTypes.length > 0) {
-      const type = String(p.type || '');
-      if (!mapFilters.propertyTypes.includes(type)) return false;
+      const type = String(p.type || '').toLowerCase();
+      
+      // Check if current property matches any of the selected filter groups
+      const isMatched = mapFilters.propertyTypes.some(typeId => {
+        const config = PROPERTY_TYPES.find(pt => pt.id === typeId);
+        if (!config) return false;
+        return config.dataValues.some(dv => type.includes(dv.toLowerCase()));
+      });
+      
+      if (!isMatched) return false;
     }
     if (mapFilters.reducedOnly) {
       const reason = String(p.update_reason || '').toLowerCase();
@@ -594,11 +594,26 @@ function App() {
                 <h3>Property Types</h3>
                 <div className="checkbox-grid">
                   {PROPERTY_TYPES.map(type => (
-                    <label key={type.value} className="checkbox-label">
+                    <label key={type.id} className="checkbox-label">
                       <input
                         type="checkbox"
-                        checked={params.propertyTypes.includes(type.value)}
-                        onChange={() => toggleArrayItem('propertyTypes', type.value)}
+                        checked={params.propertyTypes.some(pv => type.searchValues.includes(pv))}
+                        onChange={() => {
+                          setParams(prev => {
+                            const current = [...prev.propertyTypes];
+                            let updated;
+                            // Checking if any of the searchValues are already present
+                            const containsAny = type.searchValues.some(sv => current.includes(sv));
+                            if (containsAny) {
+                              // If checked, remove all searchValues
+                              updated = current.filter(item => !type.searchValues.includes(item));
+                            } else {
+                              // If not checked, add all searchValues (taking care not to duplicate)
+                              updated = Array.from(new Set([...current, ...type.searchValues]));
+                            }
+                            return { ...prev, propertyTypes: updated };
+                          });
+                        }}
                       />
                       <span>{type.label}</span>
                     </label>

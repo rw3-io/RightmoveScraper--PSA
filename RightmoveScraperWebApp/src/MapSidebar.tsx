@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { IS_GOOGLE_MAPS_AVAILABLE } from './config';
+import { PROPERTY_TYPES } from './constants';
 
 export interface MapFilters {
     maxDaysOnMarket: number | null;
@@ -39,16 +40,7 @@ const STATION_PRESETS = [
     { label: '≤ 2mi', value: 2 },
 ];
 
-const PROPERTY_TYPE_PRESETS = [
-    'Detached',
-    'Semi-Detached',
-    'Terraced',
-    'End of Terrace',
-    'Flat',
-    'Bungalow',
-    'Mews',
-    'Town House',
-];
+
 
 
 export default function MapSidebar({ totalCount, filteredCount, sqftCount, filters, onFiltersChange, onBack, onShowStats, onDownload }: MapSidebarProps) {
@@ -135,19 +127,19 @@ export default function MapSidebar({ totalCount, filteredCount, sqftCount, filte
 
                 {!isTypesCollapsed && (
                     <div className="type-grid">
-                        {PROPERTY_TYPE_PRESETS.map(type => (
-                            <label key={type} className="checkbox-label small">
+                        {PROPERTY_TYPES.map(type => (
+                            <label key={type.id} className="checkbox-label small">
                                 <input
                                     type="checkbox"
-                                    checked={filters.propertyTypes.includes(type)}
+                                    checked={filters.propertyTypes.includes(type.id)}
                                     onChange={() => {
-                                        const newTypes = filters.propertyTypes.includes(type)
-                                            ? filters.propertyTypes.filter(t => t !== type)
-                                            : [...filters.propertyTypes, type];
+                                        const newTypes = filters.propertyTypes.includes(type.id)
+                                            ? filters.propertyTypes.filter(t => t !== type.id)
+                                            : [...filters.propertyTypes, type.id];
                                         update({ propertyTypes: newTypes });
                                     }}
                                 />
-                                <span>{type}</span>
+                                <span>{type.label}</span>
                             </label>
                         ))}
                     </div>

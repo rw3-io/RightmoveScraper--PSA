@@ -5,6 +5,7 @@ import {
     AreaChart, Area
 } from 'recharts';
 import type { PropertyData } from './MapView';
+import { getNormalizedPropertyType } from './constants';
 
 interface StatsOverlayProps {
     properties: PropertyData[];
@@ -134,7 +135,7 @@ export default function StatsOverlay({ properties, onClose }: StatsOverlayProps)
     // Property Type Distribution (Pie) - Group small counts
     const typeCounts: Record<string, number> = {};
     properties.forEach(p => {
-        const type = p.type || 'Other';
+        const type = getNormalizedPropertyType(p.type || '');
         typeCounts[type] = (typeCounts[type] || 0) + 1;
     });
 

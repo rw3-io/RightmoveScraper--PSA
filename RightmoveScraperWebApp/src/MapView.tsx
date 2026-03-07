@@ -9,6 +9,7 @@ import {
 } from '@vis.gl/react-google-maps';
 import { GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_MAP_ID, IS_GOOGLE_MAPS_AVAILABLE } from './config';
 import LeafletMapView from './LeafletMapView';
+import { getNormalizedPropertyType } from './constants';
 
 export interface PropertyData {
     id?: string | number;
@@ -290,7 +291,7 @@ export default function MapView({ properties, showStationRoutes }: MapViewProps)
                                     )}
                                     <div className="popup-price">{formatPrice(selected.price)}</div>
                                     <div className="popup-type">
-                                        {selected.type || 'Property'}
+                                        {getNormalizedPropertyType(selected.type || 'Property')}
                                         {selected.bedrooms ? ` · ${selected.bedrooms} bed` : ''}
                                         {selected.sqft ? ` · ${selected.sqft} sq ft` : ''}
                                     </div>
