@@ -317,14 +317,26 @@ export default function MapView({ properties, showStationRoutes }: MapViewProps)
                                     </div>
 
                                     {selected.url && (
-                                        <a
-                                            href={selected.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="popup-link"
-                                        >
-                                            View on Rightmove →
-                                        </a>
+                                        <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem' }}>
+                                            <a
+                                                href={selected.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="popup-link"
+                                                style={{ margin: 0 }}
+                                            >
+                                                View on Rightmove →
+                                            </a>
+                                            <a
+                                                href={`https://www.google.com/maps/search/?api=1&query=${Number(selected.latitude)}%2C${Number(selected.longitude)}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="popup-link google-maps-link"
+                                                style={{ margin: 0, color: '#10b981' }}
+                                            >
+                                                Google Maps 📍
+                                            </a>
+                                        </div>
                                     )}
                                 </div>
                             </InfoWindow>

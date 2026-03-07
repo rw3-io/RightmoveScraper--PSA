@@ -105,15 +105,26 @@ export default function LeafletMapView({ properties }: LeafletMapViewProps) {
                                 </div>
 
                                 {property.url && (
-                                    <a
-                                        href={property.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="popup-link"
-                                        style={{ display: 'block', marginTop: '0.75rem', color: '#3b82f6', textDecoration: 'none', fontWeight: '500', fontSize: '0.9rem' }}
-                                    >
-                                        View on Rightmove →
-                                    </a>
+                                    <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem' }}>
+                                        <a
+                                            href={property.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="popup-link"
+                                            style={{ margin: 0, color: '#3b82f6', textDecoration: 'none', fontWeight: '500', fontSize: '0.9rem' }}
+                                        >
+                                            View on Rightmove →
+                                        </a>
+                                        <a
+                                            href={`https://www.google.com/maps/search/?api=1&query=${lat}%2C${lng}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="popup-link google-maps-link"
+                                            style={{ margin: 0, color: '#10b981', textDecoration: 'none', fontWeight: '500', fontSize: '0.9rem' }}
+                                        >
+                                            Google Maps 📍
+                                        </a>
+                                    </div>
                                 )}
                             </div>
                         </Popup>
