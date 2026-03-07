@@ -8,7 +8,7 @@ import StatsOverlay from './StatsOverlay';
 import HelpOverlay from './HelpOverlay';
 
 // Standard Rightmove Parameters for Property For Sale
-import { PROPERTY_TYPES } from './constants';
+import { PROPERTY_TYPES, isTypeMatch } from './constants';
 
 const TENURE_TYPES = [
   { value: 'FREEHOLD', label: 'Freehold' },
@@ -137,13 +137,11 @@ function App() {
       if (isNaN(price) || price > mapFilters.maxPrice) return false;
     }
     if (mapFilters.propertyTypes.length > 0) {
-      const type = String(p.type || '').toLowerCase();
-      
       // Check if current property matches any of the selected filter groups
       const isMatched = mapFilters.propertyTypes.some(typeId => {
         const config = PROPERTY_TYPES.find(pt => pt.id === typeId);
         if (!config) return false;
-        return config.dataValues.some(dv => type.includes(dv.toLowerCase()));
+        return config.dataValues.some(dv => isTypeMatch(String(p.type || ''), dv));
       });
       
       if (!isMatched) return false;

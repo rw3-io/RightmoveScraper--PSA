@@ -64,14 +64,33 @@ export const PROPERTY_TYPES: PropertyTypeConfig[] = [
 ];
 
 /**
+ * Strictly checks if a raw property type matches a target data value.
+ * Prevents "semi-detached" from being broadly matched by "detached".
+ */
+export const isTypeMatch = (rawType: string, dv: string): boolean => {
+    const raw = rawType.toLowerCase().trim();
+    const target = dv.toLowerCase().trim();
+
+    if (raw === target) return true;
+
+    // Prevent cross-contamination where "Detached" catches "Semi-Detached"
+    if (target.includes('detached') && !target.includes('semi') && !target.includes('link')) {
+        if (raw.includes('semi') || raw.includes('link')) {
+            return false;
+        }
+    }
+
+    return raw.includes(target);
+};
+
+/**
  * Finds the primary label for a raw property type string from the scraper
  */
 export const getNormalizedPropertyType = (rawType: string): string => {
     if (!rawType) return 'Other';
     
-    const lowerRaw = rawType.toLowerCase();
     const match = PROPERTY_TYPES.find(pt => 
-        pt.dataValues.some(dv => lowerRaw.includes(dv.toLowerCase()))
+        pt.dataValues.some(dv => isTypeMatch(rawType, dv))
     );
     
     return match ? match.label : rawType;
