@@ -6,6 +6,7 @@ import {
     AdvancedMarker,
     InfoWindow,
     useMap,
+    Pin
 } from '@vis.gl/react-google-maps';
 import { GOOGLE_MAPS_API_KEY, GOOGLE_MAPS_MAP_ID, IS_GOOGLE_MAPS_AVAILABLE } from './config';
 import LeafletMapView from './LeafletMapView';
@@ -37,6 +38,7 @@ export interface PropertyData {
 interface MapViewProps {
     properties: PropertyData[];
     showStationRoutes: boolean;
+    featuredIds: string[];
 }
 
 interface RouteCacheEntry {
@@ -207,7 +209,7 @@ function WalkingRoute({
     return null;
 }
 
-export default function MapView({ properties, showStationRoutes }: MapViewProps) {
+export default function MapView({ properties, showStationRoutes, featuredIds }: MapViewProps) {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [routeInfo, setRouteInfo] = useState<{ distance: string; duration: string } | null>(null);
     const routeCache = useRef<Record<string, RouteCacheEntry>>({});
@@ -234,7 +236,7 @@ export default function MapView({ properties, showStationRoutes }: MapViewProps)
     const defaultCenter = { lat: 52.035, lng: -2.43 };
 
     if (!IS_GOOGLE_MAPS_AVAILABLE) {
-        return <LeafletMapView properties={properties} />;
+        return <LeafletMapView properties={properties} featuredIds={featuredIds} />;
     }
 
     return (
@@ -252,6 +254,7 @@ export default function MapView({ properties, showStationRoutes }: MapViewProps)
                 {validProperties.map((property, idx) => {
                     const lat = Number(property.latitude);
                     const lng = Number(property.longitude);
+                    const isFeatured = featuredIds.includes(String(property.id));
                     const key = property.id ? String(property.id) : `${lat}-${lng}-${idx}`;
 
                     return (
@@ -259,7 +262,13 @@ export default function MapView({ properties, showStationRoutes }: MapViewProps)
                             key={key}
                             position={{ lat, lng }}
                             onClick={() => handleMarkerClick(key)}
-                        />
+                        >
+                            <Pin 
+                                background={isFeatured ? '#10b981' : '#3b82f6'} 
+                                borderColor={isFeatured ? '#064e3b' : '#1d4ed8'}
+                                glyphColor="white"
+                            />
+                        </AdvancedMarker>
                     );
                 })}
 

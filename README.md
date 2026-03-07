@@ -71,6 +71,8 @@ The application will be available at `http://localhost:5173`.
 - **Interactive Map View**: See all scraped properties on a map with custom markers.
 - **Smart Fallback**: Automatically uses **OpenStreetMap** if no Google Maps API key is provided, ensuring the app is always functional.
 - **Station Directions**: Toggle walking routes to the nearest train station (Requires Google Maps API).
+- **Featured Properties**: Highlight specific properties by pasting their Rightmove IDs.
+- **ID-Specific Filtering**: Toggle "Show featured only" to quickly isolate your top-pick listings.
 - **Market Insights Dashboard**: Open the "📊 View Market Insights" overlay to see:
     - Price distributions (High/Low/Avg).
     - Bedroom & Property Type breakdowns (Pie charts).

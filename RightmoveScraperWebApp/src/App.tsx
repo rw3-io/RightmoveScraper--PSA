@@ -109,7 +109,9 @@ function App() {
     minPrice: null,
     maxPrice: null,
     propertyTypes: [],
-    showStationRoutes: true
+    showStationRoutes: false,
+    featuredIds: [],
+    showFeaturedOnly: false
   });
 
   // Derive filtered properties for the map
@@ -146,6 +148,13 @@ function App() {
       
       if (!isMatched) return false;
     }
+
+    // Featured IDs Filtering
+    const isFeatured = mapFilters.featuredIds.includes(String(p.id));
+    if (mapFilters.showFeaturedOnly && !isFeatured) {
+        return false;
+    }
+
     if (mapFilters.reducedOnly) {
       const reason = String(p.update_reason || '').toLowerCase();
       if (!reason.includes('reduced')) return false;
@@ -458,6 +467,7 @@ function App() {
             <MapView
               properties={filteredProperties}
               showStationRoutes={mapFilters.showStationRoutes}
+              featuredIds={mapFilters.featuredIds}
             />
           </div>
           {showStats && (

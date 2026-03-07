@@ -43,6 +43,8 @@ export default function HelpOverlay({ onClose }: HelpOverlayProps) {
                         <ul>
                             <li><strong>Filters</strong>: Use the sidebar on the map to refine your results in real-time.</li>
                             <li><strong>Station Routes</strong>: Toggle "Directions to Station" to see total walking time and routes to the nearest train station for any property.</li>
+                            <li><strong>Featured IDs</strong>: Paste <strong>Rightmove Property IDs</strong> (found in the URL, e.g., <code>1745...</code>) to highlight them in emerald on the map.</li>
+                            <li><strong>Show Featured Only</strong>: Use this toggle to hide all other markers and focus exclusively on your short-listed property IDs.</li>
                             <li><strong>📊 Market Insights</strong>: Open this overlay to see price distributions, property type breakdowns, and square footage value analysis.</li>
                         </ul>
                     </section>

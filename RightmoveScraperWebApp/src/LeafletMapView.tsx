@@ -16,8 +16,18 @@ L.Icon.Default.mergeOptions({
     shadowUrl: markerShadow,
 });
 
+const featuredIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    shadowUrl: markerShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
 interface LeafletMapViewProps {
     properties: PropertyData[];
+    featuredIds: string[];
 }
 
 function formatPrice(price: number | string | undefined): string {
@@ -51,7 +61,7 @@ function ChangeView({ properties }: { properties: PropertyData[] }) {
     return null;
 }
 
-export default function LeafletMapView({ properties }: LeafletMapViewProps) {
+export default function LeafletMapView({ properties, featuredIds }: LeafletMapViewProps) {
     const validProperties = properties.filter(
         p => p.latitude && p.longitude && !isNaN(Number(p.latitude)) && !isNaN(Number(p.longitude))
     );
@@ -74,10 +84,15 @@ export default function LeafletMapView({ properties }: LeafletMapViewProps) {
             {validProperties.map((property, idx) => {
                 const lat = Number(property.latitude);
                 const lng = Number(property.longitude);
+                const isFeatured = featuredIds.includes(String(property.id));
                 const key = property.id ? String(property.id) : `${lat}-${lng}-${idx}`;
 
                 return (
-                    <Marker key={key} position={[lat, lng]}>
+                    <Marker 
+                        key={key} 
+                        position={[lat, lng]}
+                        icon={isFeatured ? featuredIcon : new L.Icon.Default()}
+                    >
                         <Popup>
                             <div className="popup-content leaflet-popup-override">
                                 {property.image_url && (

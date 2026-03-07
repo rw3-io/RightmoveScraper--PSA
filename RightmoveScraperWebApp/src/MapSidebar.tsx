@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IS_GOOGLE_MAPS_AVAILABLE } from './config';
 import { PROPERTY_TYPES } from './constants';
 
@@ -12,6 +12,8 @@ export interface MapFilters {
     maxPrice: number | null;
     propertyTypes: string[];
     showStationRoutes: boolean;
+    featuredIds: string[];
+    showFeaturedOnly: boolean;
 }
 
 interface MapSidebarProps {
@@ -45,6 +47,18 @@ const STATION_PRESETS = [
 
 export default function MapSidebar({ totalCount, filteredCount, sqftCount, filters, onFiltersChange, onBack, onShowStats, onDownload }: MapSidebarProps) {
     const [isTypesCollapsed, setIsTypesCollapsed] = useState(true);
+    const [featuredIdsInput, setFeaturedIdsInput] = useState(filters.featuredIds.join(', '));
+
+    useEffect(() => {
+        const currentParsedIds = featuredIdsInput
+            .split(/[\s,]+/)
+            .map(id => id.trim())
+            .filter(id => /^\d+$/.test(id));
+            
+        if (JSON.stringify(currentParsedIds) !== JSON.stringify(filters.featuredIds)) {
+            setFeaturedIdsInput(filters.featuredIds.join(', '));
+        }
+    }, [filters.featuredIds]);
 
     const update = (partial: Partial<MapFilters>) =>
         onFiltersChange({ ...filters, ...partial });
@@ -178,6 +192,41 @@ export default function MapSidebar({ totalCount, filteredCount, sqftCount, filte
             </div>
 
             <div className="sidebar-section">
+                <h3>Featured Properties</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <textarea
+                        className="sidebar-input small"
+                        rows={2}
+                        placeholder="Paste comma-separated Rightmove IDs (e.g. 1234567, 8901234)"
+                        value={featuredIdsInput}
+                        onChange={(e) => {
+                            setFeaturedIdsInput(e.target.value);
+                            const ids = e.target.value
+                                .split(/[\s,]+/)
+                                .map(id => id.trim())
+                                .filter(id => /^\d+$/.test(id));
+                            update({ featuredIds: ids });
+                        }}
+                        style={{ fontSize: '0.8rem', background: 'rgba(0,0,0,0.2)', fontFamily: 'monospace' }}
+                    />
+                    <label className="toggle-label">
+                        <div
+                            className={`toggle-switch ${filters.showFeaturedOnly ? 'on' : ''}`}
+                            onClick={() => update({ showFeaturedOnly: !filters.showFeaturedOnly })}
+                        >
+                            <div className="toggle-knob" />
+                        </div>
+                        <span>Show featured only</span>
+                    </label>
+                </div>
+                {filters.featuredIds.length > 0 && (
+                    <p className="sidebar-note" style={{ color: '#10b981', marginTop: '4px' }}>
+                        {filters.featuredIds.length} IDs highlighted in emerald.
+                    </p>
+                )}
+            </div>
+
+            <div className="sidebar-section">
                 <h3>Min Size (Sq Ft)</h3>
                 <input
                     type="number"
@@ -242,12 +291,17 @@ export default function MapSidebar({ totalCount, filteredCount, sqftCount, filte
                         minPrice: null,
                         maxPrice: null,
                         propertyTypes: [],
-                        showStationRoutes: true
+                        showStationRoutes: false,
+                        featuredIds: [],
+                        showFeaturedOnly: false
                     })}
                 >
                     ✕ Reset Filters
                 </button>
             )}
+            
+            {/* Spacer to prevent cut-off at the bottom on scroll */}
+            <div style={{ minHeight: '2rem', flexShrink: 0 }}></div>
         </aside>
     );
 }
